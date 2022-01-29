@@ -21,6 +21,44 @@ or
 
 depending on your package manager.
 
+# Usage
+This library provides a class and a function based approach to generate passwords and/or policies. Generally, we need to build our policy first which we can then use to generate a password from.
+
+#### `generateCompliantPassword(passwordPolicy, { minPolicyConstraints[, whitelist] })`
+Generate a single password given the `passwordPolicy` and the `minPolicyConstraints` from the `GeneratorConfig`.
+
+```typescript
+/* Policy dictates that we want a password that is at least 12 characters long
+   with a minimum of two special characters, two digits and two uppercase
+   letters.
+ */
+const policy: PasswordPolicy = {
+  length: 12,
+  special: 2,
+  digit: 2,
+  upper: 2,
+};
+/* We want to have a constraint of minimum eight lowercase characters but only
+   with letters [a-m] and not so fancy special chars.
+ */
+const config: GeneratorConfig = {
+  minPolicyConstraints: {
+    lower: 8,
+  },
+  whitelist: {
+    ...defaultWhitelist,
+    special: '!?#+-_',
+    lower: 'abcdefghijklm',
+  },
+};
+const password: string = generateCompliantPassword(policy, config);
+```
+
+## How to run an example
+You can run an example, e.g. the _function/password.example.ts_ in the _examples_ folder like so:
+
+    EXAMPLE="examples/function/password.example"; npx tsc "${EXAMPLE}.ts" && node "${EXAMPLE}.js"
+
 # Development
 In case you want to develop on or contribute to this library, make sure to check out the remote HEAD and install all dependencies with your favorite package manager for NodeJs.
 To run this application type
