@@ -57,6 +57,9 @@ export const generateRandomPolicy = (
   policyKeys: (keyof PasswordPolicy)[],
   { minConstraints, maxConstraints }: PolicyConstraintsConfig
 ): Partial<PasswordPolicy> => {
+  if (policyKeys.length === 0) {
+    throw new Error('policyKeys must not be empty!');
+  }
   return Object.assign(
     {},
     ...policyKeys.map((key) => {
