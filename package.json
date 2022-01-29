@@ -9,7 +9,7 @@
   "packageManager": "yarn@3.1.1",
   "description": "Generates random password compliant to a given policy.",
   "author": "Thomas Hesse (https://thomas-hesse.eu/)",
-  "license": "GPL-3.0",
+  "license": "LGPL-3.0",
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "keywords": [
