@@ -4,6 +4,9 @@ The purpose of this library is to provide a powerful password generator based on
 This library can also be used to generate random various `PasswordPolicy` of different quality levels.
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword?ref=badge_shield)
+[![Lint and test](https://github.com/tahesse/betapassword/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/tahesse/betapassword/actions/workflows/lint-and-test.yml)
+[![CodeQL](https://github.com/tahesse/betapassword/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tahesse/betapassword/actions/workflows/codeql-analysis.yml)
+[![codecov](https://codecov.io/gh/tahesse/betapassword/branch/main/graph/badge.svg?token=XgxgmeWzNo)](https://codecov.io/gh/tahesse/betapassword)
 
 # Installation
 
