@@ -3,8 +3,9 @@
 The purpose of this library is to provide a powerful password generator based on a `PasswordPolicy` configuration.
 This library can also be used to generate random various `PasswordPolicy` of different quality levels.
 
-# Installation
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword?ref=badge_shield)
+
+# Installation
 
 To install this library, run
 
