@@ -1,9 +1,8 @@
 import {
   getNormalizedRandomNumber,
   getRandomElementsFromArray,
-  getRandomNumber,
   getRandomWhitelistEntryToFillFrom,
-  shuffle,
+  randomShuffle,
 } from './util/helper';
 import {
   digit as digits,
@@ -119,8 +118,8 @@ export const generateCompliantPassword = (
       }
     }
   }
-  return shuffle(password).join('');
-  // return randomShuffle(password, 50).join('');
+  // return shuffle(password).join('');
+  return randomShuffle(password, 50).join('');
 };
 
 // Class API
