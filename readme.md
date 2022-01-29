@@ -54,6 +54,32 @@ const config: GeneratorConfig = {
 const password: string = generateCompliantPassword(policy, config);
 ```
 
+#### new PasswordGenerator({ minPolicyConstraints[, whitelist] }).generate(policy)
+```typescript
+/* Policy1 dictates that we want a password that is at least 12 characters long.
+ */
+const policy1: PasswordPolicy = { length: 12 };
+/* Policy2 dictates that we want a password that is at least 24 characters long.
+ */
+const policy2: PasswordPolicy = { length: 24 };
+/* We want to have a constraint of minimum eight lowercase characters but only
+   with letters [a-m] and not so fancy special chars.
+ */
+const config: GeneratorConfig = {
+  minPolicyConstraints: {
+    upper: 8,
+  },
+  whitelist: {
+    ...defaultWhitelist,
+    special: '!?#+-_',
+    lower: 'abcdefghijklm',
+  },
+};
+const generator = new PasswordGenerator(config);
+const password1 = generator.generate(policy1);
+const password2 = generator.generate(policy2);
+```
+
 ## How to run an example
 You can run an example, e.g. the _function/password.example.ts_ in the _examples_ folder like so:
 
