@@ -3,6 +3,7 @@ import {
   getRandomElementsFromArray,
   getRandomWhitelistEntryToFillFrom,
   randomShuffle,
+  shuffle,
 } from './util/helper';
 import {
   digit as digits,
@@ -118,8 +119,7 @@ export const generateCompliantPassword = (
       }
     }
   }
-  // return shuffle(password).join('');
-  return randomShuffle(password, 50).join('');
+  return randomShuffle(shuffle(password), 50).join('');
 };
 
 // Class API
