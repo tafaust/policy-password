@@ -4,6 +4,8 @@ The purpose of this library is to provide a powerful password generator based on
 This library can also be used to generate random various `PasswordPolicy` of different quality levels.
 
 # Installation
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword?ref=badge_shield)
+
 To install this library, run
 
     yarn add betapassword
@@ -39,3 +41,7 @@ Please pay attention to the `.editorconfig` and `.eslintrc.js` and stick to thos
 
 # Author
 [Thomas Hesse](https://thomas-hesse.eu)
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword?ref=badge_large)
