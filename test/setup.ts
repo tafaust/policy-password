@@ -1,5 +1,5 @@
 import { MinPolicyConstraints, PasswordPolicy } from '../src/policy';
-import { PasswordRule } from '../src/generator';
+import { PasswordRule } from '../src/password';
 import { expect } from '@jest/globals';
 
 declare global {
