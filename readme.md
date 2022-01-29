@@ -54,7 +54,7 @@ const config: GeneratorConfig = {
 const password: string = generateCompliantPassword(policy, config);
 ```
 
-#### new PasswordGenerator({ minPolicyConstraints[, whitelist] }).generate(policy)
+#### `new PasswordGenerator({ minPolicyConstraints[, whitelist] }).generate(policy)`
 ```typescript
 /* Policy1 dictates that we want a password that is at least 12 characters long.
  */
