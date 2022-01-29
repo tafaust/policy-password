@@ -6,10 +6,10 @@ name: Lint and test
 on:
   push:
     branches: [ main ]
-    paths: [ '**.ts' ]
+#    paths: [ '**.ts' ]
   pull_request:
     branches: [ main ]
-    paths: [ '**.ts' ]
+#    paths: [ '**.ts' ]
 
 jobs:
   build__lint_and_test:
@@ -28,4 +28,16 @@ jobs:
       - run: yarn install
       - run: yarn build
       - run: yarn run lint
-      - run: yarn run test:coverage
+      - run: yarn run test
+#      - run: yarn run test:coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: true
+          files: ./coverage/clover.xml
+          flags: jest
+          name: codecov-betapassword
+#          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
