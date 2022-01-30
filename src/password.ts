@@ -1,8 +1,6 @@
 import {
-  getNormalizedRandomNumber,
   getRandomElementsFromArray,
-  getRandomWhitelistEntryToFillFrom,
-  randomShuffle,
+  getRandomIncludeListEntry,
   shuffle,
 } from './util/helper';
 import {
@@ -13,6 +11,7 @@ import {
   IncludeList,
 } from './constants';
 import { MinPolicyConstraints, PasswordPolicy } from './policy';
+import { getRandomIndex } from './prng';
 
 /**
  * There must be a rule for each key of a {@link PasswordPolicy}.
@@ -31,7 +30,7 @@ export type PasswordRule = {
 
 export type GeneratorConfig = {
   minPolicyConstraints: MinPolicyConstraints;
-  whitelist?: IncludeList;
+  includeList?: IncludeList;
 };
 
 // Functional API
@@ -48,7 +47,7 @@ export type GeneratorConfig = {
  */
 export const generateCompliantPassword = (
   passwordPolicy: PasswordPolicy,
-  { minPolicyConstraints, whitelist }: GeneratorConfig
+  { minPolicyConstraints, includeList }: GeneratorConfig
 ): string => {
   // obtain lower bounds
   const { digit, lower, upper, special, length } = minPolicyConstraints;
@@ -91,8 +90,8 @@ export const generateCompliantPassword = (
       pattern: new RegExp(String.raw`^.{${lengthMinAmount},}`),
     },
   ];
-  // obtain whitelist characters for the password
-  const _whitelist: IncludeList = whitelist || {
+  // obtain includeList characters for the password
+  const _includeList: IncludeList = includeList || {
     lower: lowerCase,
     upper: upperCase,
     digit: digits,
@@ -104,22 +103,22 @@ export const generateCompliantPassword = (
   while (!patternArray.every((pattern) => pattern.test(password.join('')))) {
     for (const rule of rules) {
       if (!rule.pattern.test(password.join(''))) {
-        // fill with only _some_ random whitelist entries if all options are
+        // fill with only _some_ random includeList entries if all options are
         // exhausted and the length constraint does not hold yet
         password.push(
           ...getRandomElementsFromArray(
-            rule.name === 'length'
-              ? getRandomWhitelistEntryToFillFrom(_whitelist)
-              : _whitelist[rule.name],
-            rule.name === 'length'
-              ? (0.5 + getNormalizedRandomNumber() * rule.amount) << 0
-              : rule.amount
+            [
+              ...(rule.name === 'length'
+                ? getRandomIncludeListEntry(_includeList)
+                : _includeList[rule.name]),
+            ],
+            rule.name === 'length' ? getRandomIndex(rule.amount) : rule.amount
           )
         );
       }
     }
   }
-  return randomShuffle(shuffle(password), 50).join('');
+  return shuffle(password).join('');
 };
 
 // Class API
@@ -129,19 +128,19 @@ export const generateCompliantPassword = (
  * @class
  */
 export class PasswordGenerator {
-  private whitelist?: IncludeList;
+  private includeList?: IncludeList;
   private minPolicyConstraints: MinPolicyConstraints;
 
   constructor(config: GeneratorConfig) {
-    this.whitelist = config.whitelist;
+    this.includeList = config.includeList;
     this.minPolicyConstraints = config.minPolicyConstraints;
   }
 
   public generate = (policy: PasswordPolicy): string => {
-    const { minPolicyConstraints, whitelist } = this;
+    const { minPolicyConstraints, includeList } = this;
     return generateCompliantPassword(policy, {
       minPolicyConstraints,
-      whitelist,
+      includeList: includeList,
     });
   };
 }

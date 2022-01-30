@@ -30,7 +30,7 @@
     "lint": "eslint \"{src,test}/**/*.ts\"",
     "format": "yarn run lint --fix",
     "test": "jest --detectOpenHandles",
-    "test:coverage": "jest --coverage --coverageReporters=\"text-summary\""
+    "test:coverage": "jest --coverage"
   },
   "devDependencies": {
     "@types/eslint": "^8",

@@ -1,5 +1,6 @@
-import { getRandomNumber, shuffle } from './util/helper';
+import { shuffle } from './util/helper';
 import { IncludeList } from './constants';
+import { getRandomNumber } from './prng';
 
 /**
  * The policy derives from the {@link IncludeList} keys and a `length` attribute.
@@ -34,12 +35,10 @@ export type PolicyConstraintsConfig = {
  *          maximum length of the total number of keys.
  */
 export const generateRandomPolicyKeys = (): (keyof PasswordPolicy)[] => {
-  const keys = ['length', 'special', 'upper', 'lower', 'digit'];
-  // a in [0, round(keys.length / 2)]
-  const a = getRandomNumber(0, (0.5 + keys.length * 0.5) << 0);
-  // b in [min(keys.length, round(keys.length / 2), keys.length]
-  return shuffle(
-    keys.slice(a, getRandomNumber(Math.min(a + 1, keys.length), keys.length))
+  const keys = shuffle(['length', 'special', 'upper', 'lower', 'digit']);
+  return keys.slice(
+    0,
+    getRandomNumber(1, keys.length - 1)
   ) as (keyof PasswordPolicy)[];
 };
 

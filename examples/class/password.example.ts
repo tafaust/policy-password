@@ -32,7 +32,7 @@ const config: GeneratorConfig = {
   minPolicyConstraints: {
     lower: 8,
   },
-  whitelist: {
+  includeList: {
     ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',

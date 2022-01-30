@@ -43,7 +43,7 @@ depending on your package manager.
 # Usage
 This library provides a class and a function based approach to generate passwords and/or policies. Generally, we need to build our policy first which we can then use to generate a password from.
 
-#### `generateCompliantPassword(passwordPolicy, { minPolicyConstraints[, whitelist] })`
+#### `generateCompliantPassword(passwordPolicy, { minPolicyConstraints[, includeList] })`
 Generate a single password given the `passwordPolicy` and the `minPolicyConstraints` from the `GeneratorConfig`.
 
 ```typescript
@@ -64,7 +64,7 @@ const config: GeneratorConfig = {
   minPolicyConstraints: {
     lower: 8,
   },
-  whitelist: {
+  includeList: {
     ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',
@@ -73,7 +73,7 @@ const config: GeneratorConfig = {
 const password: string = generateCompliantPassword(policy, config);
 ```
 
-#### `new PasswordGenerator({ minPolicyConstraints[, whitelist] }).generate(policy)`
+#### `new PasswordGenerator({ minPolicyConstraints[, includeList] }).generate(policy)`
 ```typescript
 /* Policy1 dictates that we want a password that is at least 12 characters long.
  */
@@ -88,7 +88,7 @@ const config: GeneratorConfig = {
   minPolicyConstraints: {
     upper: 8,
   },
-  whitelist: {
+  includeList: {
     ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',
