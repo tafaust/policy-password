@@ -1,9 +1,18 @@
 <p align="center">
-  <img src="assets/logo_top.png" alt="PolicyPassword"/>
+  <img src="assets/logo_top_bg.png" alt="PolicyPassword"/>
   <br>
   <i>policy-password is a library to generate passwords<br/>from policies given constraints.</i>
   <br>
 </p>
+
+<p align="center">
+  <a href="CONTRIBUTING.md">Contributing Guidelines</a>
+  ·
+  <a href="https://github.com/tahesse/policy-password/issues">Submit an Issue</a>
+  <br>
+  <br>
+</p>
+
 <hr/>
 
 The purpose of this library is to provide a powerful password generator based on a `PasswordPolicy` configuration.
