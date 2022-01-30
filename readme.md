@@ -5,6 +5,7 @@
   <br>
 </p>
 <hr/>
+
 The purpose of this library is to provide a powerful password generator based on a `PasswordPolicy` configuration.
 This especially useful when using a library such as [keycloak](https://github.com/keycloak/keycloak-nodejs-admin-client). 
 Keycloak provides the ability to set password policies per realm which can be obtained and parsed to generate passwords with this library.
