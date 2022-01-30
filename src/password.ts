@@ -10,7 +10,7 @@ import {
   lower as lowerCase,
   special as specialChars,
   upper as upperCase,
-  Whitelist,
+  IncludeList,
 } from './constants';
 import { MinPolicyConstraints, PasswordPolicy } from './policy';
 
@@ -31,18 +31,18 @@ export type PasswordRule = {
 
 export type GeneratorConfig = {
   minPolicyConstraints: MinPolicyConstraints;
-  whitelist?: Whitelist;
+  whitelist?: IncludeList;
 };
 
 // Functional API
 
 /**
- * Generate a password with characters from a {@link Whitelist} constrained by a
+ * Generate a password with characters from a {@link IncludeList} constrained by a
  * {@link PasswordPolicy} with lower bound constraints.
  * @param passwordPolicy The {@link PasswordPolicy} to adhere to.
  * @param minPolicyConstraints The minimum constraints towards password
  *                             generation given by {@link MinPolicyConstraints}.
- * @param whitelist A list of {@link Whitelist} characters to build the password
+ * @param whitelist A list of {@link IncludeList} characters to build the password
  *                  from.
  * @returns string The generated password. Enjoy. :)
  */
@@ -92,7 +92,7 @@ export const generateCompliantPassword = (
     },
   ];
   // obtain whitelist characters for the password
-  const _whitelist: Whitelist = whitelist || {
+  const _whitelist: IncludeList = whitelist || {
     lower: lowerCase,
     upper: upperCase,
     digit: digits,
@@ -129,7 +129,7 @@ export const generateCompliantPassword = (
  * @class
  */
 export class PasswordGenerator {
-  private whitelist?: Whitelist;
+  private whitelist?: IncludeList;
   private minPolicyConstraints: MinPolicyConstraints;
 
   constructor(config: GeneratorConfig) {

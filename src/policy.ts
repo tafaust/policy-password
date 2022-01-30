@@ -1,11 +1,11 @@
 import { getRandomNumber, shuffle } from './util/helper';
-import { Whitelist } from './constants';
+import { IncludeList } from './constants';
 
 /**
- * The policy derives from the {@link Whitelist} keys and a `length` attribute.
+ * The policy derives from the {@link IncludeList} keys and a `length` attribute.
  */
 export type PasswordPolicy = {
-  [key in keyof Whitelist | 'length']?: number;
+  [key in keyof IncludeList | 'length']?: number;
 };
 
 /**

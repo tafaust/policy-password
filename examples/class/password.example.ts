@@ -2,7 +2,7 @@ import {
   PasswordPolicy,
   GeneratorConfig,
   PasswordGenerator,
-  defaultWhitelist,
+  defaultIncludeList,
 } from '../../src/main';
 
 /* You'd want to do import like this:
@@ -11,7 +11,7 @@ import {
 //   PasswordPolicy,
 //   GeneratorConfig,
 //   PasswordGenerator,
-//   defaultWhitelist,
+//   defaultIncludeList,
 // } from 'policy-password';
 
 /* Policy dictates that we want a password that is at least 12 characters long
@@ -33,7 +33,7 @@ const config: GeneratorConfig = {
     lower: 8,
   },
   whitelist: {
-    ...defaultWhitelist,
+    ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',
   },

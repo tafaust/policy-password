@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import { Whitelist } from '../constants';
+import { IncludeList } from '../constants';
 
 export const RANDOM_NUM_BYTES = 0x1;
 
@@ -45,7 +45,7 @@ export const getRandomElementsFromArray = (arr: string, amount: number) =>
  * @param whitelist
  */
 export const getRandomWhitelistEntryToFillFrom: (
-  whitelist: Whitelist
+  whitelist: IncludeList
 ) => string = (whitelist: Record<string, string>) => {
   const keys = Object.keys(whitelist);
   return whitelist[keys[(getNormalizedRandomNumber() * keys.length) << 0]];

@@ -65,7 +65,7 @@ const config: GeneratorConfig = {
     lower: 8,
   },
   whitelist: {
-    ...defaultWhitelist,
+    ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',
   },
@@ -89,7 +89,7 @@ const config: GeneratorConfig = {
     upper: 8,
   },
   whitelist: {
-    ...defaultWhitelist,
+    ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',
   },
