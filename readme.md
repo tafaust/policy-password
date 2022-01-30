@@ -1,23 +1,32 @@
-<img src="https://github.com/tahesse/betapassword/raw/main/assets/logo.png" style="display: block; margin: 0 auto" alt="BET/!\PASSWORD"/>
-
+<p align="center">
+  <img src="assets/logo_top.png" alt="PolicyPassword"/>
+  <br>
+  <i>policy-password is a library to generate passwords<br/>from policies given constraints.</i>
+  <br>
+</p>
+<hr/>
 The purpose of this library is to provide a powerful password generator based on a `PasswordPolicy` configuration.
-This library can also be used to generate random various `PasswordPolicy` of different quality levels.
+This especially useful when using a library such as [keycloak](https://github.com/keycloak/keycloak-nodejs-admin-client). 
+Keycloak provides the ability to set password policies per realm which can be obtained and parsed to generate passwords with this library.
+<br/>
+
+[comment]: <> (This library can also be used to generate random various `PasswordPolicy` of different quality levels.)
 
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftahesse%2Fbetapassword?ref=badge_shield)
-[![Lint and test](https://github.com/tahesse/betapassword/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/tahesse/betapassword/actions/workflows/lint-and-test.yml)
-[![CodeQL](https://github.com/tahesse/betapassword/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tahesse/betapassword/actions/workflows/codeql-analysis.yml)
-[![codecov](https://codecov.io/gh/tahesse/betapassword/branch/main/graph/badge.svg?token=XgxgmeWzNo)](https://codecov.io/gh/tahesse/betapassword)
+[![Lint and test](https://github.com/tahesse/policy-password/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/tahesse/policy-password/actions/workflows/lint-and-test.yml)
+[![CodeQL](https://github.com/tahesse/policy-password/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tahesse/policy-password/actions/workflows/codeql-analysis.yml)
+[![codecov](https://codecov.io/gh/tahesse/policy-password/branch/main/graph/badge.svg?token=XgxgmeWzNo)](https://codecov.io/gh/tahesse/policy-password)
 
 # Installation
 
 To install this library, run
 
-    yarn add betapassword
+    yarn add policy-password
     yarn install
 
 or
 
-    npm i betapassword
+    npm i policy-password
 
 depending on your package manager.
 

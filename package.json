@@ -1,5 +1,5 @@
 {
-  "name": "betapassword",
+  "name": "policy-password",
   "version": "0.1.0",
   "homepage": "https://github.com/tahesse/betapassword",
   "repository": {
@@ -16,7 +16,8 @@
     "generate",
     "password",
     "generator",
-    "unique"
+    "policy",
+    "constraint"
   ],
   "files": [
     "dist/src/**/*",

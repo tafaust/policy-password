@@ -12,7 +12,7 @@ import {
 //   GeneratorConfig,
 //   PasswordGenerator,
 //   defaultWhitelist,
-// } from 'betapassword';
+// } from 'policy-password';
 
 /* Policy dictates that we want a password that is at least 12 characters long
    with a minimum of two special characters, two digits and two uppercase
