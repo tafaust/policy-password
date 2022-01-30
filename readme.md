@@ -26,6 +26,7 @@ Keycloak provides the ability to set password policies per realm which can be ob
 [![Lint and test](https://github.com/tahesse/policy-password/actions/workflows/lint-and-test.yml/badge.svg)](https://github.com/tahesse/policy-password/actions/workflows/lint-and-test.yml)
 [![CodeQL](https://github.com/tahesse/policy-password/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/tahesse/policy-password/actions/workflows/codeql-analysis.yml)
 [![codecov](https://codecov.io/gh/tahesse/policy-password/branch/main/graph/badge.svg?token=XgxgmeWzNo)](https://codecov.io/gh/tahesse/policy-password)
+[![npm version](https://badge.fury.io/js/policy-password.svg)](https://badge.fury.io/js/policy-password)
 
 # Installation
 
