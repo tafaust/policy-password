@@ -44,7 +44,7 @@ const toComplyPolicy = (received: string, validator: PasswordPolicy) => {
       name: 'special',
       amount: specialMinAmount,
       pattern: new RegExp(
-        String.raw`^(?:[^!@#$%^&*()+_\-=}{[\]|:;"/?.><,\`~]*[!@#$%^&*()+_\-=}{[\]|:;"/?.><,\`~]){${specialMinAmount},}`
+        String.raw`^(?:[^\`~!@#$%^&*()\-=_+[{\]}\\|;\':",.<>/?]*[\`~!@#$%^&*()\-=_+[{\]}\\|;\':",.<>/?]){${specialMinAmount},}`
       ),
     },
     {
