@@ -1,8 +1,4 @@
-import {
-  getNormalizedRandomNumber,
-  getRandomIndex,
-  getRandomNumber,
-} from '../prng';
+import { getNormalizedRandomNumber, getRandomIndex } from '../prng';
 import { IncludeList } from '../constants';
 
 /**
