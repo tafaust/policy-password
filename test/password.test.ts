@@ -1,38 +1,33 @@
 import {
   generateCompliantPassword,
-  generateRandomPolicy,
-  generateRandomPolicyKeys,
   GeneratorConfig,
-  MinPolicyConstraints,
+  MinConstraint,
   PasswordGenerator,
-  PasswordPolicy,
+  Policy,
+  PolicyGeneratorConfig,
+  policyNistRecommendations,
 } from '../src/main';
+import * as policyModule from '../src/util/policy';
+import { sampleRandomPolicy } from '../src/util';
 
-describe('PasswordGenerator', () => {
-  let generator: PasswordGenerator;
-  let config: GeneratorConfig;
-
-  beforeAll(() => {
-    config = { minPolicyConstraints: { length: 8 } };
-    generator = new PasswordGenerator(config);
-  });
-
+describe('password.ts', () => {
   test('generateCompliantPassword() has length combined from constraints (excluding length)', () => {
-    const minConstraints: MinPolicyConstraints = {
+    const constraint: MinConstraint = {
       upper: 0,
       lower: 0,
       digit: 0,
       special: 0,
     };
-    const policy: PasswordPolicy = {
-      lower: 3,
+    const policy: Policy = {
+      lower: 5,
       digit: 3,
       special: 3,
       upper: 3,
       length: 2,
     };
-    const password = generateCompliantPassword(policy, {
-      minPolicyConstraints: minConstraints,
+    const password = generateCompliantPassword({
+      policy,
+      constraints: { min: constraint, max: constraint },
     });
     expect(password.length).toEqual(
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -40,25 +35,55 @@ describe('PasswordGenerator', () => {
     );
   });
 
-  test('generate() password does comply the policy', () => {
+  test('generateCompliantPassword() password does comply the sampled policy', () => {
+    const policyGenConfig: PolicyGeneratorConfig = {
+      constraints: policyNistRecommendations,
+    };
     let i = 0;
-    while (i < 50) {
-      const keys = generateRandomPolicyKeys();
-      const policy = generateRandomPolicy(keys, {
-        minConstraints: Object.assign({}, ...keys.map((k) => ({ [k]: 2 }))),
-        maxConstraints: Object.assign({}, ...keys.map((k) => ({ [k]: 4 }))),
-      });
-      const password = generator.generate(policy);
-      expect(password).toComplyPolicy(policy);
-      expect(password).toComplyPolicyAndMinConstraints(
-        policy,
-        config.minPolicyConstraints
-      );
+    while (i < 1000) {
+      const config: GeneratorConfig = {
+        policy: sampleRandomPolicy(policyGenConfig),
+        samplePolicy: false,
+      };
+      const password = generateCompliantPassword(config);
+      expect(password).toComplyPolicy(config);
+      /* eslint-disable @typescript-eslint/no-non-null-assertion */
       expect(password.length).toBeGreaterThanOrEqual(
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        config.minPolicyConstraints.length!
+        policyGenConfig.constraints.min.length!
       );
+      expect(password.length).toBeLessThanOrEqual(
+        Math.max(
+          policyGenConfig.constraints.max.length!,
+          policyGenConfig.constraints.max.lower! +
+            policyGenConfig.constraints.max.upper! +
+            policyGenConfig.constraints.max.digit! +
+            policyGenConfig.constraints.max.special!
+        )
+      );
+      /* eslint-enable @typescript-eslint/no-non-null-assertion */
       i++;
     }
+  });
+
+  test('generateCompliantPassword() samples its own policy when samplePolicy is truthy', () => {
+    const sampleRandomPolicySpy = jest.spyOn(
+      policyModule,
+      'sampleRandomPolicy'
+    );
+    const config: GeneratorConfig = {
+      policy: {}, // fixme why empty object...?
+      samplePolicy: true,
+    };
+    generateCompliantPassword(config);
+    expect(sampleRandomPolicySpy).toBeCalledTimes(1);
+  });
+
+  test('generateCompliantPassword() samples its own policy when samplePolicy is truthy', () => {
+    const config: GeneratorConfig = {
+      policy: {}, // fixme why empty object...?
+      samplePolicy: true,
+    };
+    const passwordGenerator = new PasswordGenerator(config);
+    expect(passwordGenerator.policy).toBeDefined();
   });
 });

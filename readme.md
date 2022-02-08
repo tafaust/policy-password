@@ -44,17 +44,35 @@ depending on your package manager.
 # Usage
 This library provides a class and a function based approach to generate passwords and/or policies. Generally, we need to build our policy first which we can then use to generate a password from.
 
-#### `generateCompliantPassword(passwordPolicy, { minPolicyConstraints[, includeList] })`
+#### `generateCompliantPassword({ policy[, constraints, includeList, excludeList, samplePolicy] })`
 Generate a single password given the `passwordPolicy` and the `minPolicyConstraints` from the `GeneratorConfig`.
 
 ```typescript
-/* Policy dictates that we want a password that is at least 12 characters long
+/* Policy dictates that we want a password that is at least six characters long
    with a minimum of two special characters, two digits and two uppercase
    letters.
  */
-const policy: PasswordPolicy = {
-  length: 12,
+const policy: Policy = {
   special: 2,
+  digit: 2,
+  upper: 2,
+};
+/* Prepare our config that holds the policy for password generation.
+ */
+const config: GeneratorConfig = { policy, samplePolicy: true };
+/* Generate 35 passwords with our predefined policy atop.
+ */
+const password: Password = generateCompliantPassword(config);
+```
+
+#### `new PasswordGenerator({ policy[, constraints, includeList, excludeList, samplePolicy] }).generate()`
+
+```typescript
+/* Policy dictates that we want a password that is at least 12 characters long
+   with a minimum of two two digits and two uppercase letters.
+ */
+const policy: Policy = {
+  length: 12,
   digit: 2,
   upper: 2,
 };
@@ -62,48 +80,22 @@ const policy: PasswordPolicy = {
    with letters [a-m] and not so fancy special chars.
  */
 const config: GeneratorConfig = {
-  minPolicyConstraints: {
-    lower: 8,
-  },
+  policy,
+  samplePolicy: true,
   includeList: {
     ...defaultIncludeList,
     special: '!?#+-_',
     lower: 'abcdefghijklm',
   },
 };
-const password: string = generateCompliantPassword(policy, config);
-```
-
-#### `new PasswordGenerator({ minPolicyConstraints[, includeList] }).generate(policy)`
-```typescript
-/* Policy1 dictates that we want a password that is at least 12 characters long.
- */
-const policy1: PasswordPolicy = { length: 12 };
-/* Policy2 dictates that we want a password that is at least 24 characters long.
- */
-const policy2: PasswordPolicy = { length: 24 };
-/* We want to have a constraint of minimum eight lowercase characters but only
-   with letters [a-m] and not so fancy special chars.
- */
-const config: GeneratorConfig = {
-  minPolicyConstraints: {
-    upper: 8,
-  },
-  includeList: {
-    ...defaultIncludeList,
-    special: '!?#+-_',
-    lower: 'abcdefghijklm',
-  },
-};
-const generator = new PasswordGenerator(config);
-const password1 = generator.generate(policy1);
-const password2 = generator.generate(policy2);
+const passwordGenerator = new PasswordGenerator(config);
+const password: Password = passwordGenerator.generate();
 ```
 
 ## How to run an example
 You can run an example, e.g. the _function/password.example.ts_ in the _examples_ folder like so:
 
-    EXAMPLE="examples/function/password.example"; npx tsc "${EXAMPLE}.ts" && node "${EXAMPLE}.js"
+    yarn run example:func
 
 # Development
 In case you want to develop on or contribute to this library, make sure to check out the remote HEAD and install all dependencies with your favorite package manager for NodeJs.

@@ -1,26 +1,26 @@
 import {
-  PasswordPolicy,
+  computeEntropy,
+  defaultIncludeList,
   GeneratorConfig,
   PasswordGenerator,
-  defaultIncludeList,
+  Policy,
 } from '../../src/main';
 
 /* You'd want to do import like this:
  */
 // import {
-//   PasswordPolicy,
+//   computeEntropy,
+//   defaultIncludeList,
 //   GeneratorConfig,
 //   PasswordGenerator,
-//   defaultIncludeList,
+//   Policy,
 // } from 'policy-password';
 
 /* Policy dictates that we want a password that is at least 12 characters long
-   with a minimum of two special characters, two digits and two uppercase
-   letters.
+   with a minimum of two two digits and two uppercase letters.
  */
-const policy: PasswordPolicy = {
+const policy: Policy = {
   length: 12,
-  special: 2,
   digit: 2,
   upper: 2,
 };
@@ -29,9 +29,8 @@ const policy: PasswordPolicy = {
    with letters [a-m] and not so fancy special chars.
  */
 const config: GeneratorConfig = {
-  minPolicyConstraints: {
-    lower: 8,
-  },
+  policy,
+  samplePolicy: true,
   includeList: {
     ...defaultIncludeList,
     special: '!?#+-_',
@@ -45,44 +44,48 @@ const generator = new PasswordGenerator(config);
  */
 const passwords: string[] = [];
 while (passwords.length < 35) {
-  passwords.push(generator.generate(policy));
+  const password = generator.generate();
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const entropy = computeEntropy(password, config.includeList!);
+  passwords.push(`Password ${password} has an entropy of ${entropy}.`);
 }
-
 console.log(passwords.join('\n'));
+
 /* Produces output like this:
--dL!Jdaial98gl
-dWli48d!Ra-dkg
-Cj!ei?lj4l1fjS
--ig8aQbi-j2Dla
-ib#!9gij4FlbfE
-5f!k2lchhjWbM!
-Mb61fSlllejf!#
-!Fdj7c1lUilh#h
-7eX#b-Oghi5edc
-f7I#jfi2ebS#lf
-l-kkeSd#Ah5l4g
-16Mkkj-?gkIgad
-9ijIjCkj!jj?6k
-2kbeihQC-ea5?k
-a#b-d8fhJEaj8l
-hge+g?ga27gDgE
-ic?je#bf4McgL5
-9i?9gUlk!dkebS
-igckici7h+J9#A
-aDa4h7Kdli+ea+
-cb!jeKjl#hg48X
-df3l!a8Ij+aFcf
-f!#NRai1ciei2i
-ek9gkce3aMe#T-
-eAehg+7Mhfdh-7
-f5P9d?aFigjf#b
-7l1jbjle+NiJ-d
-adb3W#Nkl?cjb8
-cghL0j6ai!#adQ
-3?iEPcclaaj1-f
-l!hPf3c7ej#Pai
-f#baQ-j3gY4ebl
-be?2ehEld4M?he
-gQl?89blfSkdb-
-?ehjAR25kdeem?
+Password l-?+Z-j?-c!b5S?5hd##f has an entropy of 121.40855398401786.
+Password +#-i+cUOl-b_5b_+c-?1l has an entropy of 121.40855398401786.
+Password #l0#k#f#hG#-Uj!+b!!6c has an entropy of 121.40855398401786.
+Password d5-c!Mf#d!l+3i#P+f!?_ has an entropy of 121.40855398401786.
+Password ???7#mi??B6b+fD_-l#ki has an entropy of 121.40855398401786.
+Password b?bJm#--Ek_fh5#_b4-?? has an entropy of 121.40855398401786.
+Password l#k?+-2i-?O--hh7jGc?+ has an entropy of 121.40855398401786.
+Password e8!?H+S#+k#kj!e_e?#7j has an entropy of 121.40855398401786.
+Password +i?-+jf#C3h-fGj!##j-4 has an entropy of 121.40855398401786.
+Password #gf3Jlaa+##?4_iK+_-+a has an entropy of 121.40855398401786.
+Password -9leil-C?L#?#d__9ed## has an entropy of 121.40855398401786.
+Password ??3ObeC#?agg#hg_#-4?# has an entropy of 121.40855398401786.
+Password ?-lgh8_#je6-c-+SBe#!+ has an entropy of 121.40855398401786.
+Password _+_i2?I+h6!-eeih?#-mL has an entropy of 121.40855398401786.
+Password iCl+-+d_-!ec7-b?#d8P# has an entropy of 121.40855398401786.
+Password g-#3Qk+?4#jd#cR+#-h?l has an entropy of 121.40855398401786.
+Password Ueik?#-#6e--1-k!liF#+ has an entropy of 121.40855398401786.
+Password hi1h#!#-kS!i-D+-?3!ef has an entropy of 121.40855398401786.
+Password ##-9-k-c9e-ZQ?#ffmi?? has an entropy of 121.40855398401786.
+Password LhDh-!?3!#fh+e_8!cj#+ has an entropy of 121.40855398401786.
+Password +#+d-_3f??Ie+cd!-kl4R has an entropy of 121.40855398401786.
+Password +!+gO+_cj#k2f-g2?+?cR has an entropy of 121.40855398401786.
+Password 8?f8A?ali++!_++Cf+bk? has an entropy of 121.40855398401786.
+Password +kUV3_gc-?e?j3+#-##ef has an entropy of 121.40855398401786.
+Password a#?lc5_8?cjE#-?#chJ!? has an entropy of 121.40855398401786.
+Password +#U?d#i-2R+a?9i_-d#ka has an entropy of 121.40855398401786.
+Password Nmae????a##l8-!i?G+k3 has an entropy of 121.40855398401786.
+Password 8-e-9abaa+!gK#-#?X!k+ has an entropy of 121.40855398401786.
+Password ?#?_l-!56Jmf-#eJbak++ has an entropy of 121.40855398401786.
+Password f-++Xi#!2E6!dj#kb-b## has an entropy of 121.40855398401786.
+Password #6K?k6#!!Xgdh!##?k+ek has an entropy of 121.40855398401786.
+Password e?+8#+Vcl5+b+c+g--#kI has an entropy of 121.40855398401786.
+Password +d??h-5-hEU!i+j?f1+-h has an entropy of 121.40855398401786.
+Password g-i4#d#ld-O+j?!-K?7_a has an entropy of 121.40855398401786.
+Password ?##gg#cf#6!#-h7l?!AOk has an entropy of 121.40855398401786.
+
  */

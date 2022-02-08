@@ -1,5 +1,5 @@
-import { getNormalizedRandomNumber, getRandomIndex } from '../prng';
-import { IncludeList } from '../constants';
+import { getNormalizedRandomNumber, getRandomIndex } from './prng';
+import { IncludeList } from '../types';
 
 /**
  * Returns `n` many random elements from an array `arr`. The same elements can

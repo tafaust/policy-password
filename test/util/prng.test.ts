@@ -2,7 +2,11 @@ import {
   getNormalizedRandomNumber,
   getRandomIndex,
   getRandomNumber,
-} from '../src/prng';
+<<<<<<< Updated upstream:test/util/prng.test.ts
+} from '../src/util/prng';
+=======
+} from '../../src/util';
+>>>>>>> Stashed changes:test/prng.test.ts
 
 describe('Pseudo Random Number Generator:', () => {
   test('getRandomNumber(N, N) returns N', () => {
@@ -23,6 +27,15 @@ describe('Pseudo Random Number Generator:', () => {
     while (i < 1000) {
       expect(getNormalizedRandomNumber()).toBeGreaterThanOrEqual(0);
       expect(getNormalizedRandomNumber()).toBeLessThanOrEqual(1);
+      i++;
+    }
+  });
+
+  test('getNormalizedRandomNumber() is in [0,1] with varying random seed', () => {
+    let i = 0;
+    while (i < 1000) {
+      expect(getNormalizedRandomNumber(i)).toBeGreaterThanOrEqual(0);
+      expect(getNormalizedRandomNumber(i)).toBeLessThanOrEqual(1);
       i++;
     }
   });

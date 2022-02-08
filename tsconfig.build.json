@@ -1,5 +1,5 @@
 {
-  "files": ["global.d.ts"],
+  "files": [],
   "extends": "./tsconfig.json",
   "include": ["src/**/*"],
   "exclude": ["node_modules", "test", "dist"]

@@ -1,125 +1,127 @@
+import { defaultIncludeList, policyNistRecommendations } from './constants';
+import type {
+  DefinitePolicy,
+  Password,
+  PolicyGeneratorConfig,
+  RuleSet,
+  GeneratorConfig,
+  IncludeList,
+  Policy,
+} from './types';
 import {
+  escapeSpecialCharacters,
+  isPolicyEmpty,
   getRandomElementsFromArray,
   getRandomIncludeListEntry,
   shuffle,
-} from './util/helper';
-import {
-  digit as digits,
-  lower as lowerCase,
-  special as specialChars,
-  upper as upperCase,
-  IncludeList,
-} from './constants';
-import { MinPolicyConstraints, PasswordPolicy } from './policy';
-import { getRandomIndex } from './prng';
-
-/**
- * There must be a rule for each key of a {@link PasswordPolicy}.
- */
-export type RuleName = keyof PasswordPolicy;
-
-/**
- * A single rule builds from a {@link RuleName}, the minimum `amount` of a char
- * to occur and the `pattern` to validate this rule.
- */
-export type PasswordRule = {
-  name: RuleName;
-  amount: number;
-  pattern: RegExp;
-};
-
-export type GeneratorConfig = {
-  minPolicyConstraints: MinPolicyConstraints;
-  includeList?: IncludeList;
-};
+  sampleRandomPolicy,
+  getRandomIndex,
+} from './util';
 
 // Functional API
 
 /**
- * Generate a password with characters from a {@link IncludeList} constrained by a
- * {@link PasswordPolicy} with lower bound constraints.
- * @param passwordPolicy The {@link PasswordPolicy} to adhere to.
- * @param minPolicyConstraints The minimum constraints towards password
- *                             generation given by {@link MinPolicyConstraints}.
- * @param whitelist A list of {@link IncludeList} characters to build the password
- *                  from.
- * @returns string The generated password. Enjoy. :)
+ * Generate a password with characters from a {@link IncludeList} constrained by
+ * a {@link Policy} with lower bound constraints.
+ * @param {GeneratorConfig} [config={}] config todo
  */
-export const generateCompliantPassword = (
-  passwordPolicy: PasswordPolicy,
-  { minPolicyConstraints, includeList }: GeneratorConfig
-): string => {
-  // obtain lower bounds
-  const { digit, lower, upper, special, length } = minPolicyConstraints;
-  const lowerMinAmount = passwordPolicy.lower || lower || 0;
-  const upperMinAmount = passwordPolicy.upper || upper || 0;
-  const digitMinAmount = passwordPolicy.digit || digit || 0;
-  const specialMinAmount = passwordPolicy.special || special || 0;
-  const lengthMinAmount = Math.max(
-    passwordPolicy.length ?? 0,
-    length ?? 0,
-    digitMinAmount + lowerMinAmount + upperMinAmount + specialMinAmount
-  );
-  // obtain password rules
-  const rules: PasswordRule[] = [
+export function generateCompliantPassword(config: GeneratorConfig): Password {
+  const { policy, includeList, excludeList, constraints } = config;
+  let _policy: Partial<Policy> = {};
+  if (config.samplePolicy ?? false) {
+    // sample policy from constraints
+    const policyConfig: PolicyGeneratorConfig = {
+      constraints: {
+        ...policyNistRecommendations,
+        ...(constraints ?? {}),
+      },
+    };
+    _policy = config.samplePolicy ? sampleRandomPolicy(policyConfig) : {};
+  }
+  // merge sampled policy with given policy
+  _policy = { ..._policy, ...(isPolicyEmpty(policy ?? {}) ? {} : policy) };
+  // prepare pool to sample password characters from
+  const _includeList: IncludeList = includeList ?? defaultIncludeList;
+  if (excludeList !== undefined) {
+    (Object.keys(_includeList) as (keyof IncludeList)[]).forEach((key) => {
+      _includeList[key] = _includeList[key].replace(
+        new RegExp(String.raw`${excludeList.join('')}`),
+        ''
+      );
+    });
+  }
+  // build rule set from policy and constraints
+  const availableRules: RuleSet = [
     {
       name: 'lower',
-      amount: lowerMinAmount,
-      pattern: new RegExp(String.raw`^(?:[^a-z]*[a-z]){${lowerMinAmount},}`),
-    },
-    {
-      name: 'upper',
-      amount: upperMinAmount,
-      pattern: new RegExp(String.raw`^(?:[^A-Z]*[A-Z]){${upperMinAmount},}`),
-    },
-    {
-      name: 'digit',
-      amount: digitMinAmount,
-      pattern: new RegExp(String.raw`^(?:[^0-9]*[0-9]){${digitMinAmount},}`),
-    },
-    {
-      name: 'special',
-      amount: specialMinAmount,
-      pattern: new RegExp(
-        String.raw`^(?:[^\`~!@#$%^&*()\-=_+[{\]}\\|;\':",.<>/?]*[\`~!@#$%^&*()\-=_+[{\]}\\|;\':",.<>/?]){${specialMinAmount},}`
+      rule: new RegExp(
+        String.raw`^(?:[^${_includeList.lower}]*[${_includeList.lower}]){${_policy.lower},}`
       ),
     },
     {
+      name: 'upper',
+      rule: new RegExp(
+        String.raw`^(?:[^${_includeList.upper}]*[${_includeList.upper}]){${_policy.upper},}`
+      ),
+    },
+    {
+      name: 'digit',
+      rule: new RegExp(
+        String.raw`^(?:[^${_includeList.digit}]*[${_includeList.digit}]){${_policy.digit},}`
+      ),
+    },
+    {
+      name: 'special',
+      rule: new RegExp(
+        String.raw`^(?:[^${_includeList.special}]*[${_includeList.special}]){${_policy.special},}`
+      ),
+    },
+    // {
+    //   name: 'special',
+    //   rule: new RegExp(
+    //     String.raw`^(?:[^${escapeSpecialCharacters(
+    //       _includeList.special
+    //     )}]*[${escapeSpecialCharacters(_includeList.special)}]){${
+    //       _policy.special
+    //     },}`
+    //   ),
+    // },
+    {
       name: 'length',
-      amount: lengthMinAmount,
-      pattern: new RegExp(String.raw`^.{${lengthMinAmount},}`),
+      rule: new RegExp(String.raw`^.{${_policy.length},}`),
     },
   ];
-  // obtain includeList characters for the password
-  const _includeList: IncludeList = includeList || {
-    lower: lowerCase,
-    upper: upperCase,
-    digit: digits,
-    special: specialChars,
-  };
-  // generate password
-  const password: string[] = [];
-  const patternArray = rules.map((rule) => rule.pattern);
+  const applicableRules = availableRules.filter((rule) =>
+    Object.keys(_policy).includes(rule.name)
+  );
+  // generate password: sample from pool until rules are satisfied
+  const password: Password[] = [];
+  const patternArray = applicableRules.map(({ rule }) => rule);
   while (!patternArray.every((pattern) => pattern.test(password.join('')))) {
-    for (const rule of rules) {
-      if (!rule.pattern.test(password.join(''))) {
+    for (const { rule, name } of applicableRules) {
+      if (!rule.test(password.join(''))) {
         // fill with only _some_ random includeList entries if all options are
         // exhausted and the length constraint does not hold yet
         password.push(
           ...getRandomElementsFromArray(
             [
-              ...(rule.name === 'length'
+              ...(name === 'length'
                 ? getRandomIncludeListEntry(_includeList)
-                : _includeList[rule.name]),
+                : _includeList[name]),
             ],
-            rule.name === 'length' ? getRandomIndex(rule.amount) : rule.amount
+            // fixme type
+            name === 'length'
+              ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                getRandomIndex(_policy[name]! - password.length + 1)
+              : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                _policy[name]!
           )
         );
       }
     }
   }
   return shuffle(password).join('');
-};
+}
 
 // Class API
 
@@ -128,19 +130,27 @@ export const generateCompliantPassword = (
  * @class
  */
 export class PasswordGenerator {
-  private includeList?: IncludeList;
-  private minPolicyConstraints: MinPolicyConstraints;
+  public readonly config: GeneratorConfig;
+  public readonly policy: DefinitePolicy;
 
   constructor(config: GeneratorConfig) {
-    this.includeList = config.includeList;
-    this.minPolicyConstraints = config.minPolicyConstraints;
+    const { policy, constraints } = config;
+    this.config = { ...config, samplePolicy: false };
+    const policyConfig: PolicyGeneratorConfig = {
+      constraints: {
+        ...policyNistRecommendations,
+        ...(constraints ?? {}),
+      },
+    };
+    this.policy = {
+      ...sampleRandomPolicy(policyConfig),
+      ...(isPolicyEmpty(policy ?? {}) ? {} : policy),
+    };
   }
 
-  public generate = (policy: PasswordPolicy): string => {
-    const { minPolicyConstraints, includeList } = this;
-    return generateCompliantPassword(policy, {
-      minPolicyConstraints,
-      includeList: includeList,
+  public generate = (): Password =>
+    generateCompliantPassword({
+      ...this.config,
+      policy: { ...this.policy, ...this.config.policy },
     });
-  };
 }

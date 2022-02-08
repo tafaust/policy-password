@@ -1,4 +1,4 @@
-import { IncludeList } from './constants';
+import { IncludeList } from './types';
 
 /*
 Password strength is determined with this chart:
@@ -33,6 +33,6 @@ Password strength is determined with this chart:
  * @returns number The resulting entropy.
  */
 export function computeEntropy(password: string, includeList: IncludeList) {
-  const pool = Object.values(includeList).join('');
+  const pool = [...new Set(Object.values(includeList))].join('');
   return Math.log2(pool.length) * password.length;
 }
