@@ -1,21 +1,20 @@
 import { defaultIncludeList, policyNistRecommendations } from './constants';
 import type {
   DefinitePolicy,
-  Password,
-  PolicyGeneratorConfig,
-  RuleSet,
   GeneratorConfig,
   IncludeList,
+  Password,
   Policy,
+  PolicyGeneratorConfig,
+  RuleSet,
 } from './types';
 import {
-  escapeSpecialCharacters,
-  isPolicyEmpty,
   getRandomElementsFromArray,
   getRandomIncludeListEntry,
-  shuffle,
-  sampleRandomPolicy,
   getRandomIndex,
+  isPolicyEmpty,
+  sampleRandomPolicy,
+  shuffle,
 } from './util';
 
 // Functional API

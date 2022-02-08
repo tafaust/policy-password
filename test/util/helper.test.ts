@@ -3,7 +3,7 @@ import {
   getRandomElementsFromArray,
   getRandomIncludeListEntry,
   shuffle,
-} from '../../src/util/helper';
+} from '../../src/util';
 
 describe('Helper', () => {
   test('getRandomElementsFromArray([element], N) returns the same element N times', () => {

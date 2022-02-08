@@ -2,11 +2,7 @@ import {
   getNormalizedRandomNumber,
   getRandomIndex,
   getRandomNumber,
-<<<<<<< Updated upstream:test/util/prng.test.ts
-} from '../src/util/prng';
-=======
 } from '../../src/util';
->>>>>>> Stashed changes:test/prng.test.ts
 
 describe('Pseudo Random Number Generator:', () => {
   test('getRandomNumber(N, N) returns N', () => {
