@@ -22,7 +22,8 @@ export const getRandomElementsFromArray = (arr: string[], amount: number) => {
 
 /**
  * Utility function to return a random {@link RuleName} from the given
- * `includeList`.
+ * `includeList`. Keys of the `includeList` that do not contain a character are
+ * dropped.
  * @param includeList An {@link IncludeList} that holds included characters per
  *                    key.
  * @returns string A string of characters to be included.
@@ -30,7 +31,9 @@ export const getRandomElementsFromArray = (arr: string[], amount: number) => {
 export const getRandomIncludeListEntry: (includeList: IncludeList) => string = (
   includeList: Record<string, string>
 ) => {
-  const keys = Object.keys(includeList);
+  const keys = Object.keys(includeList).filter(
+    (key) => includeList[key].length > 0
+  );
   return includeList[keys[getRandomIndex(keys.length)]];
 };
 
