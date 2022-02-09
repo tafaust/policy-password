@@ -10,9 +10,13 @@ import { getRandomNumber } from './prng';
 /**
  * Checks whether a {@link Policy} is empty or not.
  * @param {Policy} policy The policy to be tested.
+ * @deprecated Added and deprecated in v1.0.0
  */
 export function isPolicyEmpty(policy: Policy | DefinitePolicy): boolean {
-  return quantifiableKeys.every((keys: QuantifiableKeys) => policy[keys] === 0);
+  return (
+    (policy && Object.keys(policy).length === 0) ||
+    quantifiableKeys.every((keys: QuantifiableKeys) => policy[keys] === 0)
+  );
 }
 
 /**
