@@ -26,19 +26,19 @@ import {
  */
 export function generateCompliantPassword(config: GeneratorConfig): Password {
   const { policy, includeList, excludeList, constraints } = config;
-  let _policy: Partial<Policy> = {};
+  let _policy: Policy = {};
   if (config.samplePolicy ?? false) {
     // sample policy from constraints
     const policyConfig: PolicyGeneratorConfig = {
       constraints: {
         ...policyNistRecommendations,
-        ...(constraints ?? {}),
+        ...constraints,
       },
     };
-    _policy = config.samplePolicy ? sampleRandomPolicy(policyConfig) : {};
+    _policy = sampleRandomPolicy(policyConfig);
   }
   // merge sampled policy with given policy
-  _policy = { ..._policy, ...(isPolicyEmpty(policy ?? {}) ? {} : policy) };
+  _policy = { ..._policy, ...policy };
   // prepare pool to sample password characters from
   const _includeList: IncludeList = includeList ?? defaultIncludeList;
   if (excludeList !== undefined) {
@@ -138,12 +138,12 @@ export class PasswordGenerator {
     const policyConfig: PolicyGeneratorConfig = {
       constraints: {
         ...policyNistRecommendations,
-        ...(constraints ?? {}),
+        ...constraints,
       },
     };
     this.policy = {
       ...sampleRandomPolicy(policyConfig),
-      ...(isPolicyEmpty(policy ?? {}) ? {} : policy),
+      ...policy,
     };
   }
 
