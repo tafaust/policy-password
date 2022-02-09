@@ -1,8 +1,9 @@
 import {
   generateCompliantPassword,
   GeneratorConfig,
+  lower,
   MinConstraint,
-  PasswordGenerator,
+  Password, PasswordGenerator,
   Policy,
   PolicyGeneratorConfig,
   policyNistRecommendations,
@@ -45,7 +46,7 @@ describe('password.ts', () => {
         policy: sampleRandomPolicy(policyGenConfig),
         samplePolicy: false,
       };
-      const password = generateCompliantPassword(config);
+      const password: Password = generateCompliantPassword(config);
       expect(password).toComplyPolicy(config);
       /* eslint-disable @typescript-eslint/no-non-null-assertion */
       expect(password.length).toBeGreaterThanOrEqual(
@@ -71,19 +72,44 @@ describe('password.ts', () => {
       'sampleRandomPolicy'
     );
     const config: GeneratorConfig = {
-      policy: {}, // fixme why empty object...?
+      policy: {},
       samplePolicy: true,
+      constraints: undefined,
     };
     generateCompliantPassword(config);
     expect(sampleRandomPolicySpy).toBeCalledTimes(1);
   });
 
-  test('generateCompliantPassword() samples its own policy when samplePolicy is truthy', () => {
+  test('generateCompliantPassword() does exclude all lower characters except a with only lower on the includeList', () => {
     const config: GeneratorConfig = {
-      policy: {}, // fixme why empty object...?
+      policy: { lower: 2, length: 8 },
+      samplePolicy: false,
+      includeList: { lower, upper: '', special: '', digit: '' },
+      excludeList: [...lower.slice(1)],
+    };
+    const password: Password = generateCompliantPassword(config);
+    expect(password).toEqual('aaaaaaaa');
+  });
+
+  test("generateCompliantPassword() does exclude all lower characters except a but the resulting password is not only a's with the defaultIncludeList", () => {
+    const config: GeneratorConfig = {
+      policy: { lower: 2, length: 8 },
+      samplePolicy: false,
+      excludeList: [...lower.slice(1)],
+    };
+    const password: Password = generateCompliantPassword(config);
+    expect(password).not.toEqual('aaaaaaaa');
+  });
+});
+
+describe('PasswordGenerator', () => {
+  test('generate() generates a password', () => {
+    const config: GeneratorConfig = {
+      policy: { length: 24 },
       samplePolicy: true,
     };
-    const passwordGenerator = new PasswordGenerator(config);
-    expect(passwordGenerator.policy).toBeDefined();
+    const pg = new PasswordGenerator(config);
+    const password: Password = pg.generate();
+    expect(password.length).toBeGreaterThanOrEqual(24);
   });
 });
