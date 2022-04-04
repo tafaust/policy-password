@@ -35,7 +35,7 @@ jobs:
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           fail_ci_if_error: true
-          files: ./coverage/clover.xml
+          files: ./coverage/lcov.info
           flags: jest
           name: codecov-policy-password
           verbose: true
