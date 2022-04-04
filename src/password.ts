@@ -12,7 +12,6 @@ import {
   getRandomElementsFromArray,
   getRandomIncludeListEntry,
   getRandomIndex,
-  isPolicyEmpty,
   sampleRandomPolicy,
   shuffle,
 } from './util';
