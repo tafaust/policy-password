@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/logo_top_bg.png" alt="PolicyPassword"/>
+  <img src="assets/logo_top.png" alt="PolicyPassword"/>
   <br>
   <i>policy-password is a library to generate passwords<br/>from policies given constraints.</i>
   <br>
