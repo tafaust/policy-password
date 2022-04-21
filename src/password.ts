@@ -1,6 +1,11 @@
-import { defaultIncludeList, policyNistRecommendations } from './constants';
+import {
+  defaultIncludeList,
+  policyNistRecommendations,
+  similar,
+} from './constants';
 import type {
   DefinitePolicy,
+  ExcludeList,
   GeneratorConfig,
   IncludeList,
   Password,
@@ -25,7 +30,8 @@ import {
  */
 export function generateCompliantPassword(config: GeneratorConfig): Password {
   const { policy, includeList, excludeList, constraints } = config;
-  let _policy: Policy = {};
+  let internalPolicy: Policy = {};
+  let internalExcludeList: ExcludeList = excludeList ?? [];
   if (config.samplePolicy ?? false) {
     // sample policy from constraints
     const policyConfig: PolicyGeneratorConfig = {
@@ -34,16 +40,20 @@ export function generateCompliantPassword(config: GeneratorConfig): Password {
         ...constraints,
       },
     };
-    _policy = sampleRandomPolicy(policyConfig);
+    internalPolicy = sampleRandomPolicy(policyConfig);
   }
   // merge sampled policy with given policy
-  _policy = { ..._policy, ...policy };
+  internalPolicy = { ...internalPolicy, ...policy };
+  // handle non-quantifiable policy keys
+  if (policy.excludeSimilar ?? false) {
+    internalExcludeList = [...internalExcludeList, ...similar];
+  }
   // prepare pool to sample password characters from
   const _includeList: IncludeList = includeList ?? defaultIncludeList;
-  if (excludeList !== undefined) {
+  if (internalExcludeList.length !== 0) {
     (Object.keys(_includeList) as (keyof IncludeList)[]).forEach((key) => {
       _includeList[key] = _includeList[key].replace(
-        new RegExp(String.raw`${excludeList.join('')}`),
+        new RegExp(String.raw`${internalExcludeList.join('')}`),
         ''
       );
     });
@@ -53,44 +63,34 @@ export function generateCompliantPassword(config: GeneratorConfig): Password {
     {
       name: 'lower',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.lower}]*[${_includeList.lower}]){${_policy.lower},}`
+        String.raw`^(?:[^${_includeList.lower}]*[${_includeList.lower}]){${internalPolicy.lower},}`
       ),
     },
     {
       name: 'upper',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.upper}]*[${_includeList.upper}]){${_policy.upper},}`
+        String.raw`^(?:[^${_includeList.upper}]*[${_includeList.upper}]){${internalPolicy.upper},}`
       ),
     },
     {
       name: 'digit',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.digit}]*[${_includeList.digit}]){${_policy.digit},}`
+        String.raw`^(?:[^${_includeList.digit}]*[${_includeList.digit}]){${internalPolicy.digit},}`
       ),
     },
     {
       name: 'special',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.special}]*[${_includeList.special}]){${_policy.special},}`
+        String.raw`^(?:[^${_includeList.special}]*[${_includeList.special}]){${internalPolicy.special},}`
       ),
     },
-    // {
-    //   name: 'special',
-    //   rule: new RegExp(
-    //     String.raw`^(?:[^${escapeSpecialCharacters(
-    //       _includeList.special
-    //     )}]*[${escapeSpecialCharacters(_includeList.special)}]){${
-    //       _policy.special
-    //     },}`
-    //   ),
-    // },
     {
       name: 'length',
-      rule: new RegExp(String.raw`^.{${_policy.length},}`),
+      rule: new RegExp(String.raw`^.{${internalPolicy.length},}`),
     },
   ];
   const applicableRules = availableRules.filter((rule) =>
-    Object.keys(_policy).includes(rule.name)
+    Object.keys(internalPolicy).includes(rule.name)
   );
   // generate password: sample from pool until rules are satisfied
   const password: Password[] = [];
@@ -110,9 +110,9 @@ export function generateCompliantPassword(config: GeneratorConfig): Password {
             // fixme type
             name === 'length'
               ? // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                getRandomIndex(_policy[name]! - password.length + 1)
+                getRandomIndex(internalPolicy[name]! - password.length + 1)
               : // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-                _policy[name]!
+                internalPolicy[name]!
           )
         );
       }

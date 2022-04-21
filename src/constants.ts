@@ -9,6 +9,8 @@ export const digit = '1234567890';
 export const special = String.raw`!@#$%^&*()+_\-=}{[\]|:;"/?.><,\`~\\`;
 // String.raw`\`~!@#$%^&*()-=_+[{]}\|;':",.<>/?`;
 
+export const similar = 'ilLIoO0';
+
 export const includeListKeys: ReadonlyArray<IncludeListKey> = [
   'lower',
   'upper',
