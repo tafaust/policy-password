@@ -8,6 +8,7 @@ import {
   Policy,
   PolicyGeneratorConfig,
   policyNistRecommendations,
+  similar,
 } from '../src/main';
 import * as policyModule from '../src/util/policy';
 import { sampleRandomPolicy } from '../src/util';
@@ -100,6 +101,27 @@ describe('password.ts', () => {
     };
     const password: Password = generateCompliantPassword(config);
     expect(password).not.toEqual('aaaaaaaa');
+  });
+
+  test('generateCompliantPassword() does exclude any similar character when excludeSimilar is true', () => {
+    let i = 0;
+    while (i < 1000) {
+      const config: GeneratorConfig = {
+        policy: {
+          lower: 3,
+          upper: 3,
+          digit: 3,
+          length: 9,
+          excludeSimilar: true,
+        },
+        samplePolicy: false,
+      };
+      const password: Password = generateCompliantPassword(config);
+      expect(
+        [...similar].some((char: string) => password.includes(char))
+      ).not.toBeTruthy();
+      i++;
+    }
   });
 });
 
