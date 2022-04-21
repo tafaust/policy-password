@@ -49,39 +49,41 @@ export function generateCompliantPassword(config: GeneratorConfig): Password {
     internalExcludeList = [...internalExcludeList, ...similar];
   }
   // prepare pool to sample password characters from
-  const _includeList: IncludeList = includeList ?? defaultIncludeList;
+  const internalIncludeList: IncludeList = includeList ?? defaultIncludeList;
   if (internalExcludeList.length !== 0) {
-    (Object.keys(_includeList) as (keyof IncludeList)[]).forEach((key) => {
-      _includeList[key] = _includeList[key].replace(
-        new RegExp(String.raw`${internalExcludeList.join('')}`),
-        ''
-      );
-    });
+    (Object.keys(internalIncludeList) as (keyof IncludeList)[]).forEach(
+      (key) => {
+        internalIncludeList[key] = internalIncludeList[key].replace(
+          new RegExp(String.raw`${internalExcludeList.join('|')}`, 'g'),
+          ''
+        );
+      }
+    );
   }
   // build rule set from policy and constraints
   const availableRules: RuleSet = [
     {
       name: 'lower',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.lower}]*[${_includeList.lower}]){${internalPolicy.lower},}`
+        String.raw`^(?:[^${internalIncludeList.lower}]*[${internalIncludeList.lower}]){${internalPolicy.lower},}`
       ),
     },
     {
       name: 'upper',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.upper}]*[${_includeList.upper}]){${internalPolicy.upper},}`
+        String.raw`^(?:[^${internalIncludeList.upper}]*[${internalIncludeList.upper}]){${internalPolicy.upper},}`
       ),
     },
     {
       name: 'digit',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.digit}]*[${_includeList.digit}]){${internalPolicy.digit},}`
+        String.raw`^(?:[^${internalIncludeList.digit}]*[${internalIncludeList.digit}]){${internalPolicy.digit},}`
       ),
     },
     {
       name: 'special',
       rule: new RegExp(
-        String.raw`^(?:[^${_includeList.special}]*[${_includeList.special}]){${internalPolicy.special},}`
+        String.raw`^(?:[^${internalIncludeList.special}]*[${internalIncludeList.special}]){${internalPolicy.special},}`
       ),
     },
     {
@@ -104,8 +106,8 @@ export function generateCompliantPassword(config: GeneratorConfig): Password {
           ...getRandomElementsFromArray(
             [
               ...(name === 'length'
-                ? getRandomIncludeListEntry(_includeList)
-                : _includeList[name]),
+                ? getRandomIncludeListEntry(internalIncludeList)
+                : internalIncludeList[name]),
             ],
             // fixme type
             name === 'length'
