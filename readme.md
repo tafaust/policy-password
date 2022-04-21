@@ -94,6 +94,17 @@ const passwordGenerator = new PasswordGenerator(config);
 const password: Password = passwordGenerator.generate();
 ```
 
+### Configuration options with `GeneratorConfig`
+No matter the method you choose to generate a password, you always have to provide a `GeneratorConfig`. An overview of the  various configuration options is outlined in this table:
+
+| Option name  | Type                       | Description                                                                                                                                                                                              | Default value                                                       | Required |
+|--------------|----------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------|----------|
+| policy       | <code>Policy &#124; DefinitePolicy</code>  | The policy that dictates the length and character pool for your generated passwords.                                                                                                                     | `{}`                                                                | yes      |
+| constraints  | `Constraints`              | Constraints consist of mandatory minimum and maximum constraints. Constraints can be used to sample a policy when the `samplePolicy` flag is set to true.                                                | `policyNistRecommendations` (see constants.ts for more information) | no       |
+| includeList  | `IncludeList`              | An object that maps the individual quantifiable keys (upper, lower, digit, special) onto valid characters. The include list spans the pool of characters which are used to build the generated password. | `defaultIncludeList` (see constants.ts for more information)        | no       |
+| excludeList  | `ExcludeList`              | An array of characters to exclude from generated passwords. Takes precedence over the given or default include list.                                                                                     | `[]`                                                                | no       |
+| samplePolicy | `boolean`                  | A flag to control whether a policy should be sampled from given or default constraints.                                                                                                                  | `false`                                                             | no       |
+
 ## How to run an example
 You can run an example, e.g. the _function/password.example.ts_ in the _examples_ folder like so:
 
