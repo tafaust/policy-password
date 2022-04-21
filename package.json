@@ -1,13 +1,13 @@
 {
   "name": "policy-password",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "homepage": "https://github.com/tahesse/policy-password",
   "repository": {
     "type": "git",
     "url": "https://github.com/tahesse/policy-password.git"
   },
   "packageManager": "yarn@3.1.1",
-  "description": "Generates random password compliant to a given policy.",
+  "description": "Generates random password compliant to a given policy. The policy can be sampled using constraints.",
   "author": "Thomas Hesse (https://thomas-hesse.eu/)",
   "license": "LGPL-3.0",
   "main": "dist/main.js",
